@@ -22,31 +22,7 @@ The system is divided into two main components:
 - OpenCV used for vehicle detection via camera
 - Serial communication with ESP32 to send gate control commands
 
----
-
-## Project Structure
-Smart-Parking-System/
-│
-├── Arduino/
-│   ├── gate_controller.ino
-│   ├── lcd_parking.ino
-│   └── README.md
-│
-├── Python/
-│   ├── vehicle_detector.py
-│   ├── gate_controller.py
-│   └── README.md
-│
-├── Diagrams/
-│   ├── activity_diagram.png
-│
-├── Screenshots/
-│   ├── lcd_output.jpg
-│   ├── camera_detection.jpg
-│
-└── README.md
----
-
+ 
 ## Key Features
 - Vehicle detection using a camera (OpenCV)
 - Automatic gate control using a servo motor
@@ -55,6 +31,12 @@ Smart-Parking-System/
 - Visual indication using red and green LEDs
 - Serial communication between Python application and ESP32
 
+---
+## Screenshots
+- s1(link)
+- s2(link)
+- s3(link)
+- 
 ---
 
 ## Technologies Used
