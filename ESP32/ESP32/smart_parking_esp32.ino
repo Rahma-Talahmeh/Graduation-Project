@@ -1,47 +1,98 @@
-كود ال esp كامل مع السيرفو والشاشه واللدات import cv2
-import serial
-import time
+#include <LiquidCrystal.h>
+#include <ESP32Servo.h>
 
-# ===== Serial =====
-ser = serial.Serial('COM3', 9600, timeout=1)
-time.sleep(2)
+// ================= LCD =================
+LiquidCrystal lcd(14, 27, 26, 25, 33, 32);
 
-# ===== Camera =====
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-cap.set(cv2.CAP_PROP_FPS, 30)
+// ================= Servo =================
+Servo gateServo;
+#define SERVO_PIN 18
 
-ret, bg = cap.read()
-bg_gray = cv2.cvtColor(bg, cv2.COLOR_BGR2GRAY)
+// ================= Parking =================
+#define NUM_PARKING 4
 
-print("📷 Camera Ready")
+const int sensorPins[NUM_PARKING] = {23, 22, 21, 19};
+const int greenLEDs[NUM_PARKING]  = {5, 17, 16, 4};
+const int redLEDs[NUM_PARKING]    = {2, 15, 13, 12};
 
-last_send = 0
-COOLDOWN = 5  # ثواني
+bool gateBusy = false;   // لمنع التكرار
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        continue
+void setup() {
+  Serial.begin(9600);
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    diff = cv2.absdiff(bg_gray, gray)
-    _, thresh = cv2.threshold(diff, 30, 255, cv2.THRESH_BINARY)
+  // LCD
+  lcd.begin(16, 2);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("PARKING STATUS");
 
-    motion = cv2.countNonZero(thresh)
-    cv2.imshow("Camera Live", frame)
+  // Servo
+  gateServo.attach(SERVO_PIN);
+  gateServo.write(90); // مغلق
 
-    now = time.time()
-    if motion > 20000 and (now - last_send) > COOLDOWN:
-        print("🚗 Car Detected → OPEN")
-        ser.write(b'OPEN\n')
-        last_send = now
-        bg_gray = gray
+  // Sensors & LEDs
+  for (int i = 0; i < NUM_PARKING; i++) {
+    pinMode(sensorPins[i], INPUT_PULLDOWN);
+    pinMode(greenLEDs[i], OUTPUT);
+    pinMode(redLEDs[i], OUTPUT);
+  }
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+  Serial.println("ESP32 Ready");
+}
 
-cap.release()
-ser.close()
-cv2.destroyAllWindows()
+void loop() {
+  int availableCount = 0;
+
+  // ===== قراءة المواقف =====
+  for (int i = 0; i < NUM_PARKING; i++) {
+    int state = digitalRead(sensorPins[i]);
+
+    if (state == HIGH) {  
+      digitalWrite(greenLEDs[i], HIGH);
+      digitalWrite(redLEDs[i], LOW);
+      availableCount++;
+    } else {
+      digitalWrite(greenLEDs[i], LOW);
+      digitalWrite(redLEDs[i], HIGH);
+    }
+  }
+
+  // ===== LCD =====
+  lcd.setCursor(0, 1);
+  lcd.print("                ");
+
+  lcd.setCursor(0, 1);
+  if (availableCount > 0) {
+    lcd.print("Available: ");
+    lcd.print(availableCount);
+  } else {
+    lcd.print("Parking Full");
+  }
+
+  // ===== أمر من الكاميرا =====
+  if (Serial.available()) {
+    String cmd = Serial.readStringUntil('\n');
+    cmd.trim();
+
+    if (cmd == "OPEN") {
+      if (availableCount > 0 && !gateBusy) {
+        openGate();
+      } else {
+        Serial.println("❌ Parking Full - Gate Closed");
+      }
+    }
+  }
+
+  delay(300);
+}
+
+void openGate() {
+  gateBusy = true;
+  Serial.println("✅ Gate Opening");
+
+  gateServo.write(0);    // فتح
+  delay(4000);           // 4 ثواني
+  gateServo.write(90);   // إغلاق
+
+  gateBusy = false;
+}
