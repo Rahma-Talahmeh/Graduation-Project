@@ -25,3 +25,45 @@ The system is divided into two main components:
 ---
 
 ## Project Structure
+Smart-Parking-System/
+│
+├── Arduino/
+│   ├── gate_controller.ino
+│   ├── lcd_parking.ino
+│   └── README.md
+│
+├── Python/
+│   ├── vehicle_detector.py
+│   ├── gate_controller.py
+│   └── README.md
+│
+├── Diagrams/
+│   ├── activity_diagram.png
+│
+├── Screenshots/
+│   ├── lcd_output.jpg
+│   ├── camera_detection.jpg
+│
+└── README.md
+---
+
+## Key Features
+- Vehicle detection using a camera (OpenCV)
+- Automatic gate control using a servo motor
+- Parking availability calculation using sensors
+- Real-time status display on LCD screen
+- Visual indication using red and green LEDs
+- Serial communication between Python application and ESP32
+
+---
+
+## Technologies Used
+- Python (OpenCV, PySerial)
+- Arduino IDE
+- ESP32 Microcontroller
+- GitHub for version control
+
+---
+
+## Notes
+This project represents a functional prototype developed during GP1. The implemented components demonstrate the feasibility of the proposed system architecture and serve as a foundation for further development in GP2.
