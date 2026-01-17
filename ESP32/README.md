@@ -33,5 +33,5 @@ This module runs on an **ESP32** and controls the parking lot status display and
 ---
 
 ## Notes / To-Do
-- Future integration with **camera license plate detection** for automatic gate control.  
-- Adjust gate opening time or sensor sensitivity as needed.  
+- Future integration with **camera license plate detection**  to open the gate **only for registered vehicles** + if parking space is available.  
+
