@@ -30,6 +30,7 @@ python main.py
 ---
 
 ## Notes / To-Do
-- Ensure the camera is positioned properly for vehicle detection.  
-- `COOLDOWN` can be adjusted to avoid frequent gate opening.  
-- Future integration with license plate recognition for automatic vehicle identification.  
+The current camera module performs **vehicle detection only** based on motion detection.
+- License plate recognition is **not implemented yet**.
+- Future work includes integrating **OCR (Optical Character Recognition)** to detect the **vehicle plate number** after a car is detected.
+- The OCR module will extract and return the plate number to be used for gate control and system logging.
