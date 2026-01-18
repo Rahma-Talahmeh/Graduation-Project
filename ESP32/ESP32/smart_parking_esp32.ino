@@ -12,23 +12,24 @@ Servo gateServo;
 #define NUM_PARKING 4
 
 const int sensorPins[NUM_PARKING] = {23, 22, 21, 19};
-const int greenLEDs[NUM_PARKING]  = {5, 17, 16, 4};
-const int redLEDs[NUM_PARKING]    = {2, 15, 13, 12};
+const int greenLEDs[NUM_PARKING]  = {5, 12, 17, 16};
+const int redLEDs[NUM_PARKING]    = {4, 2, 15, 13};
 
-bool gateBusy = false;   // لمنع التكرار
+bool gateOpen = false;
 
+// ================= Setup =================
 void setup() {
   Serial.begin(9600);
+
+  // Servo
+  gateServo.attach(SERVO_PIN);
+  gateServo.write(90); // مغلق
 
   // LCD
   lcd.begin(16, 2);
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("PARKING STATUS");
-
-  // Servo
-  gateServo.attach(SERVO_PIN);
-  gateServo.write(90); // مغلق
 
   // Sensors & LEDs
   for (int i = 0; i < NUM_PARKING; i++) {
@@ -40,14 +41,17 @@ void setup() {
   Serial.println("ESP32 Ready");
 }
 
+// ================= Loop =================
 void loop() {
+
   int availableCount = 0;
+  bool parkingState[NUM_PARKING];
 
-  // ===== قراءة المواقف =====
+  // ===== قراءة السنسورات (مرة وحدة فقط) =====
   for (int i = 0; i < NUM_PARKING; i++) {
-    int state = digitalRead(sensorPins[i]);
+    parkingState[i] = digitalRead(sensorPins[i]);
 
-    if (state == HIGH) {  
+    if (parkingState[i] == HIGH) {
       digitalWrite(greenLEDs[i], HIGH);
       digitalWrite(redLEDs[i], LOW);
       availableCount++;
@@ -69,16 +73,16 @@ void loop() {
     lcd.print("Parking Full");
   }
 
-  // ===== أمر من الكاميرا =====
+  // ===== أمر الكاميرا =====
   if (Serial.available()) {
-    String cmd = Serial.readStringUntil('\n');
-    cmd.trim();
+    String command = Serial.readStringUntil('\n');
+    command.trim();
 
-    if (cmd == "OPEN") {
-      if (availableCount > 0 && !gateBusy) {
+    if (command == "OPEN") {
+      if (availableCount > 0 && !gateOpen) {
         openGate();
       } else {
-        Serial.println("❌ Parking Full - Gate Closed");
+        Serial.println("🚫 Parking Full");
       }
     }
   }
@@ -86,13 +90,13 @@ void loop() {
   delay(300);
 }
 
+// ================= Servo =================
 void openGate() {
-  gateBusy = true;
-  Serial.println("✅ Gate Opening");
+  gateOpen = true;
 
   gateServo.write(0);    // فتح
-  delay(4000);           // 4 ثواني
+  delay(3000);
   gateServo.write(90);   // إغلاق
 
-  gateBusy = false;
+  gateOpen = false;
 }
