@@ -33,11 +33,11 @@ The system is divided into two main components:
 
 ---
 ## Screenshots
-- ![Sensor response and LED activation](images/Sensor &Led.jpeg)
-- ![screen displays the parking state when there are two spot available](images/parking state.jpeg)
-- ![screen displays the parking state when it is full](images/parking state(full).jpeg)
-- ![barrier open](images/barrier open.jpeg)
-- ![barrier closed](images/barrier closed.jpeg)
+![Sensor response and LED activation](images/sensor_led.jpeg)
+![Screen displays the parking state when there are two spots available](images/parking_state.jpeg)
+![Screen displays the parking state when it is full](images/parking_state_full.jpeg)
+![Barrier open](images/barrier_open.jpeg)
+![Barrier closed](images/barrier_closed.jpeg)
 ---
 
 ## Technologies Used
