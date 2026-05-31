@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find My Car</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+
+  background: radial-gradient(circle at top left, #60a5fa, transparent 50%),
+              radial-gradient(circle at bottom right, #a78bfa, transparent 50%),
+              linear-gradient(135deg, #0f172a, #1e293b);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  overflow: hidden;
+}
+
+/* glow background */
+body::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: rgba(255,255,255,0.08);
+  filter: blur(120px);
+  top: -120px;
+  left: -120px;
+  z-index: 0;
+}
+
+/* GLASS CARD */
+.card-box {
+  position: relative;
+  z-index: 1;
+
+  width: 380px;
+  padding: 30px;
+  text-align: center;
+
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+
+  animation: fadeIn 0.8s ease;
+}
+
+/* TITLE */
+.card-box h4 {
+  margin-bottom: 20px;
+
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* INPUT */
+.form-control {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 12px;
+}
+
+.form-control::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.form-control:focus {
+  background: rgba(255,255,255,0.15);
+  border-color: #60a5fa;
+  box-shadow: 0 0 15px rgba(96,165,250,0.4);
+  color: white;
+}
+
+/* BUTTON */
+.btn-custom {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  border: none;
+  color: white;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: 0.3s;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.btn-custom:hover {
+  transform: scale(1.05);
+}
+
+/* RESULT */
+#result {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #4ade80;
+}
+
+/* LINK */
+a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card-box">
+
+  <h4><i class="fa-solid fa-car"></i> Find My Car</h4>
+
+  <input id="plate" class="form-control mb-3" placeholder="Enter Plate Number">
+
+  <button onclick="search()" class="btn btn-custom w-100">Search</button>
+
+  <h5 id="result"></h5>
+
+  <a href="dashboard.html" class="d-block mt-3">⬅ Back</a>
+
+</div>
+
+<script>
+async function search(){
+
+  let plate = document.getElementById("plate").value;
+
+  let res = await fetch("http://127.0.0.1:8000/find-car/" + plate);
+  let data = await res.json();
+
+  let result = document.getElementById("result");
+
+  if (data.spot) {
+    result.innerText = "Your car is in spot: " + data.spot;
+    result.style.color = "#4ade80";
+  } else {
+    result.innerText = data.message;
+    result.style.color = "#ef4444";
+  }
+}
+</script>
+
+</body>
+</html>
