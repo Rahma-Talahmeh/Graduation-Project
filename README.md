@@ -18,8 +18,10 @@ The system is divided into two main components:
 - 16x2 LCD to display parking availability
 
 ### 2. Software (Python)
-- Python application running on a PC
+- web-based application, allowing users to access its services anytime and from anywhere through an internet connection
 - OpenCV used for vehicle detection via camera
+- EasyOCR used for automatic license plate recognition by extracting text from detected license plate images
+- YOLOv8 used for detecting and tracking vehicles in parking areas through real-time image analysis.
 - Serial communication with ESP32 to send gate control commands
 
  
@@ -50,7 +52,7 @@ The system is divided into two main components:
 ---
 
 ## Technologies Used
-- Python (OpenCV, PySerial)
+- Python (OpenCV, PySerial, EasyOCR, YOLOv8)
 - Arduino IDE
 - ESP32 Microcontroller
 - GitHub for version control
