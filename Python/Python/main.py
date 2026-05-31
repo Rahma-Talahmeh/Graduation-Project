@@ -3,19 +3,19 @@ from parking_status import has_space
 from gate_controller import open_gate, close_gate
 import time
 
-print(" Smart Parking System Started")
+print("🚗 Smart Parking System Started")
 
 while True:
-    vehicle_detected = detect_vehicle()  
+    vehicle_detected = detect_vehicle() 
     if vehicle_detected:
-        print("car arrived")
+        print("🚗 سيارة وصلت")
 
         if has_space():
             open_gate()
-            print("✅barrier open")
+            print("✅ الحاجز مفتوح")
         else:
-            print("❌There are no places")
+            print("❌ لا يوجد أماكن")
             close_gate()
-            print("🔒barrier closed")
+            print("🔒 الحاجز مغلق")
 
-    time.sleep(1) 
+    time.sleep(1) ا
