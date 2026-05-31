@@ -35,17 +35,43 @@ The system is divided into two main components:
 
 ---
 ## Screenshots
-![Sensor response and LED activation](images/sensor_led.jpeg)  
+
+![Plate Recognition](images/plate%20number%20and%20vehicle%20recognition.jpg)
+
+*Vehicle detection and license plate recognition using YOLOv8 and EasyOCR*
+
+![Barrier open](images/barrier_open.jpeg)
+
+*Barrier open*
+
+![Login Page](images/Login.jpg)
+
+*User login interface*
+
+![Find Owner](images/find%20owner.jpg)
+
+*Search and display vehicle owner information*
+
+![Find Vehicle](images/find%20vehicle.jpg)
+
+*Search for a vehicle using its plate number*
+
+![Sensor response and LED activation](images/sensor_led.jpeg)
+
 *Sensor response and LED activation*
 
-![Screen displays the parking state when there are two spots available](images/parking_state.jpeg)  
+![Screen displays the parking state when there are two spots available](images/parking_state.jpeg)
+
 *Screen displays the parking state when there are two spots available*
 
-![Screen displays the parking state when it is full](images/parking_state_full.jpeg)  
+![Full Parking State](images/full%20parking%20state.jpg)
+
+*Screen displays the parking state when all spots are occupied*
+
+![Screen displays the parking state when it is full](images/parking_state_full.jpeg)
+
 *Screen displays the parking state when it is full*
 
-![Barrier open](images/barrier_open.jpeg)  
-*Barrier open*
 
 ![Barrier closed](images/barrier_closed.jpeg)  
 *Barrier closed*
