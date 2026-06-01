@@ -1,0 +1,48 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+wait = WebDriverWait(driver, 10)
+
+driver.get("http://127.0.0.1:5500/findOwner.html")
+
+# =========================
+# ✅ VALID TEST
+# =========================
+plate = driver.find_element(By.ID, "plate")
+plate.clear()
+plate.send_keys("123")
+
+driver.find_element(By.ID, "searchBtn").click()
+
+modal = wait.until(EC.visibility_of_element_located((By.ID, "modalBox")))
+print("VALID:", modal.text)
+
+assert "malak" in modal.text.lower()
+
+# close modal
+driver.find_element(By.CLASS_NAME, "close-btn").click()
+time.sleep(1)
+
+# =========================
+# ❌ INVALID TEST
+# =========================
+plate = driver.find_element(By.ID, "plate")
+plate.clear()
+plate.send_keys("999999")
+
+driver.find_element(By.ID, "searchBtn").click()
+
+modal = wait.until(EC.visibility_of_element_located((By.ID, "modalBox")))
+print("INVALID:", modal.text)
+
+assert "not found" in modal.text.lower() or "car not found" in modal.text.lower()
+
+driver.find_element(By.CLASS_NAME, "close-btn").click()
+
+driver.quit()
