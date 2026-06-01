@@ -1,0 +1,35 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+#  Suggested Spot
+driver.get("http://127.0.0.1:5500/suggestedSpot.html")
+
+wait = WebDriverWait(driver, 10)
+
+# =========================
+# =========================
+wait.until(lambda d: d.find_element(By.ID, "spot").text.strip() != "")
+
+spot = driver.find_element(By.ID, "spot").text.strip()
+
+print("RAW RESULT:", spot)
+
+# =========================
+# =========================
+
+if spot == "No Spots Available":
+    print("NO SPOTS AVAILABLE CASE PASSED ✅")
+
+else:
+    assert spot in ["1", "2", "3", "4"], f"Unexpected spot: {spot}"
+
+    assert spot != "1", "Spot 1 should not be suggested because it is occupied"
+
+    print("VALID SUGGESTED SPOT TEST PASSED ✅")
+
+driver.quit()
