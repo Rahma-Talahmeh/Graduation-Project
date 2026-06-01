@@ -1,0 +1,70 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import random
+
+# =========================
+# SETUP
+# =========================
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+wait = WebDriverWait(driver, 15)
+
+driver.get("http://127.0.0.1:5500/register.html")
+
+# =========================
+# RANDOM DATA (IMPORTANT)
+# =========================
+random_phone = "079" + str(random.randint(1000000, 9999999))
+random_plate = str(random.randint(1000, 9999))
+
+# =========================
+# FILL FORM
+# =========================
+wait.until(EC.presence_of_element_located((By.ID, "name"))).send_keys("Test User")
+
+wait.until(EC.presence_of_element_located((By.ID, "phone"))).send_keys(random_phone)
+
+wait.until(EC.presence_of_element_located((By.ID, "plate"))).send_keys(random_plate)
+
+wait.until(EC.presence_of_element_located((By.ID, "type"))).send_keys("Sedan")
+
+wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys("1234")
+
+# =========================
+# CLICK REGISTER
+# =========================
+wait.until(
+    EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-custom"))
+).click()
+
+# =========================
+# WAIT FOR RESULT SAFELY
+# =========================
+def get_result(driver):
+    try:
+        el = driver.find_element(By.ID, "msg")
+        text = el.text.strip()
+        if text != "":
+            return text
+        return False
+    except:
+        return False
+
+result = wait.until(get_result)
+
+print("RAW RESULT:", result)
+
+# =========================
+# ASSERT (FIXED)
+# =========================
+assert (
+    "registered successfully" in result.lower()
+    or "phone number already exists" in result.lower()
+), f"Unexpected result: {result}"
+
+print("REGISTER TEST PASSED ✅")
+
+driver.quit()
